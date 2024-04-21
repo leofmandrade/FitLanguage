@@ -10,12 +10,14 @@
 ---
 ## DESCRIPTION
 1. Motivation: The language was created to be used in the context of physical exercises, where the user can create a workout plan.
+   
 2. The language has the following structures:
     - Variables: The user can create variables and assign values to them.
     - Conditions: The user can create conditions to execute a block of code.
     - Loops: The user can create loops to execute a block of code multiple times.
     - Print: The user can print a message to the console.
-3. The language has the following keywords, in a context of .lua:
+      
+4. The language has the following keywords, in a context of .lua:
     - while -> during
     - if -> workout day
     - print -> display
