@@ -28,7 +28,7 @@ VARIABLE_ASSIGNMENT = "set", IDENTIFIER, "=", EXPRESSION ;
 
 CONDITIONAL = "if", "(", CONDITION, ")", "{", { STATEMENT }, "}" ;
 CONDITION = EXPRESSION, REL_OP, EXPRESSION ;
-REL_OP = "same as" | "heavier than" | "lighter than" | "greater than" | "less than" ;
+REL_OP = "same as" | "heavier than" | "lighter than";
 
 LOOP = "while", "(", CONDITION, ")", "do", "{", { STATEMENT }, "}" ;
 
@@ -50,9 +50,10 @@ PRINT = "display", "(", EXPRESSION, ")" ;
 EXPRESSION = IDENTIFIER | NUMBER | ARITHMETIC_EXPRESSION ;
 ARITHMETIC_EXPRESSION = EXPRESSION, ("+" | "-" | "*" | "/"), EXPRESSION ;
 IDENTIFIER = LETTER, { LETTER | "_" | DIGIT } ;
-NUMBER = NUMBER ;
+NUMBER = DIGIT, { DIGIT } ;
 LETTER = ( "a" | "..." | "z" | "A" | "..." | "Z" ) ;
 DIGIT = ( "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "0" ) ;
+
 
 ```
 ---
@@ -95,7 +96,7 @@ routine_detail FullBodyRoutine {
 ```
 
 ```python
-while (total_reps less than 90) do {
+while (total_reps lighter than 90) do {
     Pushups start
     set total_reps = total_reps + 20
     rest 60 seconds
@@ -112,4 +113,4 @@ while (total_reps less than 90) do {
 
 
 ## SYNTAX DIAGRAM
-![Diagrama Sintático](download.png)
+![Diagrama Sintático](canvas.png)
