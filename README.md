@@ -20,7 +20,7 @@
 
 ## EBNF
 ```bash
-BLOCK = { STATEMENT } ;
+BLOCK = (STATEMENT) ;
 STATEMENT = ( ROUTINE_SETUP | ROUTINE_DETAIL | VARIABLE_ASSIGNMENT | CONDITIONAL | LOOP | EXERCISE_ACTION | PROGRESS_EVENT | PRINT ), "\n" ;
 
 
@@ -32,18 +32,17 @@ REL_OP = "same as" | "heavier than" | "lighter than";
 
 LOOP = "while", "(", CONDITION, ")", "do", "{", { STATEMENT }, "}" ;
 
-ROUTINE_SETUP = "routine", IDENTIFIER, "{", { EXERCISE_DECLARATION }, "}" ;
-ROUTINE_DETAIL = "routine_detail", IDENTIFIER, "{", { WORKOUT_PART }, "}" ;
+ROUTINE_SETUP = "routine", IDENTIFIER, "{", "\n", { EXERCISE_DECLARATION }, "}" ;
+ROUTINE_DETAIL = "routine_detail", IDENTIFIER, "{", "\n",  WORKOUT_PART, "}" ;
 EXERCISE_DECLARATION = "exercise", IDENTIFIER, "with", "reps", NUMBER, "sets", NUMBER, "\n" ;
-EXERCISE_ACTION = IDENTIFIER, ACTION_TYPE, [ "rest", NUMBER, "seconds" | IDENTIFIER | PROGRESS_EVENT ] ;
-WORKOUT_PART = WARMUP | EXERCISE_SESSION | COOLDOWN ;
+EXERCISE_ACTION = (IDENTIFIER, "start", "\n", "rest", NUMBER, "seconds", "\n");
+WORKOUT_PART = (WARMUP | COOLDOWN) ;
 
-WARMUP = "warmup", "{", { EXERCISE_ACTION }, "}" ;
-EXERCISE_SESSION = IDENTIFIER, "{", EXERCISE_ACTION, [ "rest", NUMBER, "seconds" ], "}" ;
+WARMUP = "warmup", "{", "\n", { EXERCISE_ACTION }, "}" ;
 COOLDOWN = "cooldown", "{", { EXERCISE_ACTION }, "}" ;
 PROGRESS_EVENT = IDENTIFIER, "completed" ;
 
-ACTION_TYPE = "start" | "continue" | "increase";
+ACTION_TYPE = "start";
 PRINT = "display", "(", EXPRESSION, ")" ;
 
 

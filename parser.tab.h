@@ -54,49 +54,58 @@ extern int yydebug;
     YYEOF = 0,                     /* "end of file"  */
     YYerror = 256,                 /* error  */
     YYUNDEF = 257,                 /* "invalid token"  */
-    OPEN_BRACE = 258,              /* OPEN_BRACE  */
-    CLOSE_BRACE = 259,             /* CLOSE_BRACE  */
-    NEW_LINE = 260,                /* NEW_LINE  */
-    SET = 261,                     /* SET  */
-    EQUAL = 262,                   /* EQUAL  */
-    WHILE = 263,                   /* WHILE  */
-    IF = 264,                      /* IF  */
-    OPEN_BLOCK = 265,              /* OPEN_BLOCK  */
-    CLOSE_BLOCK = 266,             /* CLOSE_BLOCK  */
-    DO = 267,                      /* DO  */
-    ROUTINE = 268,                 /* ROUTINE  */
-    EXERCISE = 269,                /* EXERCISE  */
-    WITH = 270,                    /* WITH  */
-    REPS = 271,                    /* REPS  */
-    SETS = 272,                    /* SETS  */
-    REST = 273,                    /* REST  */
-    SECONDS = 274,                 /* SECONDS  */
-    WARMUP = 275,                  /* WARMUP  */
-    COOLDOWN = 276,                /* COOLDOWN  */
-    COMPLETED = 277,               /* COMPLETED  */
-    DISPLAY = 278,                 /* DISPLAY  */
-    SAME_AS = 279,                 /* SAME_AS  */
-    HEAVIER_THAN = 280,            /* HEAVIER_THAN  */
-    LIGHTER_THAN = 281,            /* LIGHTER_THAN  */
-    GREATER_THAN = 282,            /* GREATER_THAN  */
-    LESS_THAN = 283,               /* LESS_THAN  */
-    ROUTINE_DETAIL = 284,          /* ROUTINE_DETAIL  */
-    START = 285,                   /* START  */
-    CONTINUE = 286,                /* CONTINUE  */
-    INCREASE = 287,                /* INCREASE  */
+    IDENTIFIER = 258,              /* IDENTIFIER  */
+    NUMBER = 259,                  /* NUMBER  */
+    ROUTINE = 260,                 /* ROUTINE  */
+    ROUTINE_DETAIL = 261,          /* ROUTINE_DETAIL  */
+    EXERCISE = 262,                /* EXERCISE  */
+    WITH = 263,                    /* WITH  */
+    REPS = 264,                    /* REPS  */
+    SETS = 265,                    /* SETS  */
+    START = 266,                   /* START  */
+    CONTINUE = 267,                /* CONTINUE  */
+    INCREASE = 268,                /* INCREASE  */
+    COMPLETED = 269,               /* COMPLETED  */
+    WARMUP = 270,                  /* WARMUP  */
+    COOLDOWN = 271,                /* COOLDOWN  */
+    DISPLAY = 272,                 /* DISPLAY  */
+    IF = 273,                      /* IF  */
+    WHILE = 274,                   /* WHILE  */
+    DO = 275,                      /* DO  */
+    SAME_AS = 276,                 /* SAME_AS  */
+    HEAVIER_THAN = 277,            /* HEAVIER_THAN  */
+    LIGHTER_THAN = 278,            /* LIGHTER_THAN  */
+    SET = 279,                     /* SET  */
+    REST = 280,                    /* REST  */
+    SECONDS = 281,                 /* SECONDS  */
+    ELSE = 282,                    /* ELSE  */
+    LBRACE = 283,                  /* LBRACE  */
+    RBRACE = 284,                  /* RBRACE  */
+    LPAREN = 285,                  /* LPAREN  */
+    RPAREN = 286,                  /* RPAREN  */
+    EQUALS = 287,                  /* EQUALS  */
     PLUS = 288,                    /* PLUS  */
     MINUS = 289,                   /* MINUS  */
-    TIMES = 290,                   /* TIMES  */
-    DIVIDE = 291,                  /* DIVIDE  */
-    ID = 292,                      /* ID  */
-    NUMERO = 293                   /* NUMERO  */
+    MULT = 290,                    /* MULT  */
+    DIV = 291,                     /* DIV  */
+    NEWLINE = 292                  /* NEWLINE  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef int YYSTYPE;
+union YYSTYPE
+{
+#line 9 "parser.y"
+
+    int num;     // For numeric values
+    char* str;   // For string values
+
+#line 106 "parser.tab.h"
+
+};
+typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
 #endif

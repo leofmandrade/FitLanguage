@@ -1,154 +1,124 @@
 %{
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+extern int yylex();
+void yyerror(const char *s);
 %}
 
+%union {
+    int num;     // For numeric values
+    char* str;   // For string values
+}
 
-%token OPEN_BRACE CLOSE_BRACE NEW_LINE SET EQUAL WHILE IF OPEN_BLOCK CLOSE_BLOCK DO ROUTINE EXERCISE WITH REPS SETS REST SECONDS WARMUP
-%token COOLDOWN COMPLETED DISPLAY
-%token SAME_AS HEAVIER_THAN LIGHTER_THAN GREATER_THAN LESS_THAN ROUTINE_DETAIL
-%token START CONTINUE INCREASE PLUS MINUS TIMES DIVIDE ID NUMERO
+%token <str> IDENTIFIER
+%token <num> NUMBER
+%token ROUTINE ROUTINE_DETAIL EXERCISE WITH REPS SETS START CONTINUE INCREASE COMPLETED WARMUP COOLDOWN DISPLAY IF WHILE DO SAME_AS HEAVIER_THAN LIGHTER_THAN SET REST SECONDS ELSE
+%token LBRACE RBRACE LPAREN RPAREN EQUALS PLUS MINUS MULT DIV NEWLINE
+
+%type <num> expression condition
+
+%left PLUS MINUS
+%left MULT DIV
+%nonassoc LPAREN RPAREN
 
 
 %%
-program: 
-    block
+block: 
+    statement
+    | block statement
     ;
-
-
-block:
-    OPEN_BRACE statement CLOSE_BRACE
-    ;
+;
 
 statement:
-    routine_setup NEW_LINE
-    | routine_detail NEW_LINE
-    | variable_assignment NEW_LINE
-    | conditional NEW_LINE
-    | loop NEW_LINE
-    | exercise_action NEW_LINE
-    | progress_event NEW_LINE
-    | print NEW_LINE
-    ;
-
-variable_assignment:
-    SET identifier EQUAL expression
-    ;
+    routine_setup 
+    | routine_detail
+    | variable_assignment
+    | conditional
+    | exercise_action
+    | statement NEWLINE
+;
 
 conditional:
-    IF OPEN_BRACE condition CLOSE_BRACE OPEN_BLOCK statement CLOSE_BLOCK
-    ;
+    IF LPAREN RPAREN LBRACE NEWLINE statement RBRACE LPAREN
 
-condition:
-    expression rel_op expression
-    ;
+; 
 
-rel_op:
-    SAME_AS 
-    | HEAVIER_THAN
-    | LIGHTER_THAN
-    | GREATER_THAN
-    | LESS_THAN
-    ;
-
-loop:
-    WHILE OPEN_BRACE condition CLOSE_BRACE DO OPEN_BLOCK statement CLOSE_BLOCK
-    ;
 
 routine_setup:
-    ROUTINE identifier OPEN_BRACE exercise_declaration CLOSE_BRACE
-    ;
+    ROUTINE IDENTIFIER LBRACE NEWLINE exercise_declarations RBRACE
+;
 
 routine_detail:
-    ROUTINE_DETAIL identifier OPEN_BRACE workout_part CLOSE_BRACE
-    ;
-
-exercise_declaration:
-    EXERCISE identifier WITH REPS NUMERO SETS NUMERO NEW_LINE
-    ;
-
-exercise_action:
-    identifier action_type 
-    | identifier action_type REST NUMERO SECONDS
-    | identifier action_type identifier
-    | identifier action_type progress_event
-    ;
+    ROUTINE_DETAIL IDENTIFIER LBRACE NEWLINE workout_part RBRACE
+;
 
 workout_part:
-    warmup 
-    | exercise_session
+    workout_part warmup
+    | workout_part cooldown
+    | workout_part exercise_action
+    | warmup
     | cooldown
-    ;
-
-warmup:
-    WARMUP OPEN_BRACE exercise_action CLOSE_BRACE
-    ;
-
-exercise_session:
-    identifier OPEN_BRACE exercise_action CLOSE_BRACE
-    | identifier OPEN_BRACE exercise_action REST NUMERO SECONDS CLOSE_BRACE
-    ;
+    | exercise_action
+;
 
 cooldown:
-    COOLDOWN OPEN_BRACE exercise_action CLOSE_BRACE
-    ;
+    COOLDOWN LBRACE NEWLINE exercise_action RBRACE NEWLINE
 
-progress_event:
-    identifier COMPLETED
-    ;
+warmup:
+    WARMUP LBRACE NEWLINE exercise_action RBRACE NEWLINE
+;
 
-action_type:
-    START
-    | CONTINUE
-    | INCREASE
-    ;
+exercise_action:
+    IDENTIFIER START NEWLINE REST NUMBER SECONDS NEWLINE
+    | IDENTIFIER START NEWLINE REST NUMBER SECONDS NEWLINE exercise_action
+;
 
-print:
-    DISPLAY OPEN_BRACE expression CLOSE_BRACE
-    ;
+
+exercise_declarations:
+    exercise_declarations exercise_declaration
+    | exercise_declaration
+;
+
+exercise_declaration:
+    EXERCISE IDENTIFIER WITH REPS NUMBER SETS NUMBER NEWLINE
+;
+
+variable_assignment:
+    SET IDENTIFIER EQUALS expression NEWLINE
+;
 
 expression:
-    identifier
-    | NUMERO
+    IDENTIFIER
+    | NUMBER
     | arithmetic_expression
-    ;
+;
 
 arithmetic_expression:
-    expression PLUS expression
+    MINUS expression %prec PLUS
+    |expression PLUS expression
     | expression MINUS expression
-    | expression TIMES expression
-    | expression DIVIDE expression
-    ;
+    | expression MULT expression
+    | expression DIV expression
+    | LPAREN expression RPAREN
+    | LPAREN arithmetic_expression RPAREN
+;
 
-identifier:
-    ID { ID | "_" | digit }
-    ;
 
 
 %%
 
+void yyerror(const char *s) {
 
-
-void yyerror(char *s) {
-    fprintf(stderr, "Error: %s\n", s);
+    fprintf(stderr, "Erro de sintaxe: %s\n", s);
 }
 
-int main(){
-    int res = yyparse();
-    printf("res: %d\n", res);
-    if (res == 0) {
-        printf("Parsing successful\n");
-        return 1;
+int main() {
+    int result = yyparse();
+    if (result == 0) {
+        printf("Sintaxe correta\n");
     } else {
-        printf("Parsing failed\n");
-        return 0;
+        printf("Erro de sintaxe\n");
     }
-
-
+    return result;
 }
-
-
-
-
-
-

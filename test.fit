@@ -1,0 +1,24 @@
+routine FullBodyRoutine {
+    exercise Burpees with reps 10 sets 3
+}
+
+routine_detail FullBodyRoutine {
+    warmup {
+        pushups start 
+        rest 30 seconds
+        jumping_jacks start
+        rest 30 seconds
+    }
+    cooldown {
+        stretching start
+        rest 10 seconds
+    }
+}
+
+set FullBodyRoutine = 3 + 3 * -1
+
+if () {
+    Pushups start
+    rest 30 seconds
+} 
+(
