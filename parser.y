@@ -11,9 +11,9 @@ void yyerror(const char *s);
     char* str;   // For string values
 }
 
-%token <str> IDENTIFIER
+%token <str> IDENTIFIER STRING
 %token <num> NUMBER
-%token ROUTINE ROUTINE_DETAIL EXERCISE WITH REPS SETS START CONTINUE INCREASE COMPLETED WARMUP COOLDOWN DISPLAY IF WHILE DO SAME_AS HEAVIER_THAN LIGHTER_THAN SET REST SECONDS ELSE
+%token ROUTINE ROUTINE_DETAIL EXERCISE WITH REPS SETS START CONTINUE INCREASE COMPLETED WARMUP COOLDOWN DISPLAY IF WHILE SAME_AS HEAVIER_THAN LIGHTER_THAN SET REST SECONDS ELSE
 %token LBRACE RBRACE LPAREN RPAREN EQUALS PLUS MINUS MULT DIV NEWLINE
 
 %type <num> expression condition
@@ -36,13 +36,41 @@ statement:
     | variable_assignment
     | conditional
     | exercise_action
+    | print
+    | progress_event
+    | loop
+    | expression
     | statement NEWLINE
 ;
 
-conditional:
-    IF LPAREN RPAREN LBRACE NEWLINE statement RBRACE LPAREN
+loop:
+    WHILE LPAREN condition RPAREN LBRACE NEWLINE statement RBRACE
+;
 
+progress_event:
+    IDENTIFIER CONTINUE NEWLINE
+    | IDENTIFIER INCREASE NEWLINE
+    | IDENTIFIER COMPLETED NEWLINE
+;
+
+print:
+    DISPLAY LPAREN expression RPAREN
+
+conditional:
+    IF LPAREN condition RPAREN LBRACE NEWLINE statement RBRACE
+    | IF LPAREN condition RPAREN LBRACE NEWLINE statement RBRACE ELSE LBRACE NEWLINE statement RBRACE
 ; 
+
+condition:
+    expression rel_op expression
+    | expression
+;
+
+rel_op:
+    HEAVIER_THAN
+    | LIGHTER_THAN
+    | SAME_AS
+;
 
 
 routine_setup:
@@ -92,6 +120,7 @@ expression:
     IDENTIFIER
     | NUMBER
     | arithmetic_expression
+    | STRING
 ;
 
 arithmetic_expression:
@@ -102,6 +131,7 @@ arithmetic_expression:
     | expression DIV expression
     | LPAREN expression RPAREN
     | LPAREN arithmetic_expression RPAREN
+    | expression EQUALS expression
 ;
 
 

@@ -1,24 +1,11 @@
-routine FullBodyRoutine {
-    exercise Burpees with reps 10 sets 3
-}
-
-routine_detail FullBodyRoutine {
-    warmup {
-        pushups start 
-        rest 30 seconds
-        jumping_jacks start
-        rest 30 seconds
-    }
-    cooldown {
-        stretching start
-        rest 10 seconds
-    }
-}
-
-set FullBodyRoutine = 3 + 3 * -1
-
-if () {
+while (total_reps lighter than 90) do {
     Pushups start
-    rest 30 seconds
-} 
-(
+    set total_reps = total_reps + 20
+    rest 60 seconds
+    Squats start
+    set total_reps = total_reps + 15
+    rest 60 seconds
+    Burpees start
+    set total_reps = total_reps + 10
+    rest 60 seconds
+}

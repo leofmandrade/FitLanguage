@@ -60,56 +60,53 @@ DIGIT = ( "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "0" ) ;
 ### CODE EXAMPLES
 ```python
 routine FullBodyRoutine {
-    exercise Pushups with reps 20 sets 3
-    exercise Squats with reps 15 sets 4
     exercise Burpees with reps 10 sets 3
+    exercise Squats with reps 10 sets 3
+    exercise Deadlifts with reps 10 sets 3
+    exercise Pullups with reps 10 sets 3
+    exercise Pushups with reps 10 sets 3
+    exercise Planks with reps 10 sets 3
 }
-```
 
-```python
+routine ChestDay {
+    exercise BenchPress with reps 10 sets 3
+    exercise InclineBenchPress with reps 10 sets 3
+    exercise DumbbellFlyes with reps 10 sets 3
+}
+
 routine_detail FullBodyRoutine {
     warmup {
-        Pushups start
+        pushups start 
         rest 30 seconds
-        Pushups continue
-        Pushups completed
-    }
-    exercise_session Squats {
-        Squats start
-        rest 60 seconds
-        Squats continue
-        Squats completed
-    }
-    exercise_session Burpees {
-        Burpees start
-        rest 45 seconds
-        Burpees continue
-        Burpees completed
+        jumping_jacks start
+        rest 30 seconds
     }
     cooldown {
-        display("Cooling down with light stretching.")
-        rest 120 seconds
+        stretching start
+        rest 10 seconds
     }
 }
 
-```
-
-```python
-while (total_reps lighter than 90) do {
-    Pushups start
-    set total_reps = total_reps + 20
-    rest 60 seconds
-    Squats start
-    set total_reps = total_reps + 15
-    rest 60 seconds
-    Burpees start
-    set total_reps = total_reps + 10
-    rest 60 seconds
+set LegDay = ChestDay + 1
+if (LegDay heavier than ChestDay) {
+    ChestDay increase
+} else {
+    ChestDay completed
 }
 
+
+set ShoulderLoad = 15
+set BackLoad = 70
+while (ShoulderLoad lighter than BackLoad) {
+    ShoulderLoad = ShoulderLoad + 5
+}
+
+
+display ("You have completed your workout for today")
 ```
+
 
 
 
 ## SYNTAX DIAGRAM
-![Diagrama Sintático](canvas.png)
+![Diagrama Sintático](canvas2.png)

@@ -4,6 +4,7 @@
 
 %%
 
+
 "else"                           { return ELSE; }
 "seconds"                        { return SECONDS; }
 "rest"                           { return REST; }
@@ -22,7 +23,6 @@
 "display"                        { return DISPLAY; }
 "if"                             { return IF; }
 "while"                          { return WHILE; }
-"do"                             { return DO; }
 "same as"                        { return SAME_AS; }
 "heavier than"                   { return HEAVIER_THAN; }
 "lighter than"                   { return LIGHTER_THAN; }
@@ -40,6 +40,8 @@
 "/"                              { return DIV; }
 [a-zA-Z][a-zA-Z0-9_]*            { yylval.str = strdup(yytext); return IDENTIFIER; }
 [0-9]+                           { yylval.num = atoi(yytext); return NUMBER; }
+\"[^"\n]*\"            { yylval.str = strdup(yytext+1); yylval.str[strlen(yylval.str)-1] = 0; return STRING; }
+
 
 .                                { return yytext[0]; }
 %%
