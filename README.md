@@ -20,38 +20,73 @@
 
 ## EBNF
 ```bash
-BLOCK = (STATEMENT) ;
-STATEMENT = ( ROUTINE_SETUP | ROUTINE_DETAIL | VARIABLE_ASSIGNMENT | CONDITIONAL | LOOP | EXERCISE_ACTION | PROGRESS_EVENT | PRINT ), "\n" ;
+BLOCK = STATEMENT, { STATEMENT } ;
 
+STATEMENT = ROUTINE_SETUP
+          | ROUTINE_DETAIL
+          | VARIABLE_ASSIGNMENT
+          | CONDITIONAL
+          | EXERCISE_ACTION
+          | PRINT
+          | PROGRESS_EVENT
+          | LOOP
+          | EXPRESSION
+          | STATEMENT, "\n"
+;
 
-VARIABLE_ASSIGNMENT = "set", IDENTIFIER, "=", EXPRESSION ;
+LOOP = "while", "(", CONDITION, ")", "{", "\n", STATEMENT, "}" ;
 
-CONDITIONAL = "if", "(", CONDITION, ")", "{", { STATEMENT }, "}" ;
-CONDITION = EXPRESSION, REL_OP, EXPRESSION ;
-REL_OP = "same as" | "heavier than" | "lighter than";
+PROGRESS_EVENT = IDENTIFIER, ("continue" | "increase" | "completed"),  "\n" ;
 
-LOOP = "while", "(", CONDITION, ")", "do", "{", { STATEMENT }, "}" ;
-
-ROUTINE_SETUP = "routine", IDENTIFIER, "{", "\n", { EXERCISE_DECLARATION }, "}" ;
-ROUTINE_DETAIL = "routine_detail", IDENTIFIER, "{", "\n",  WORKOUT_PART, "}" ;
-EXERCISE_DECLARATION = "exercise", IDENTIFIER, "with", "reps", NUMBER, "sets", NUMBER, "\n" ;
-EXERCISE_ACTION = (IDENTIFIER, "start", "\n", "rest", NUMBER, "seconds", "\n");
-WORKOUT_PART = (WARMUP | COOLDOWN) ;
-
-WARMUP = "warmup", "{", "\n", { EXERCISE_ACTION }, "}" ;
-COOLDOWN = "cooldown", "{", { EXERCISE_ACTION }, "}" ;
-PROGRESS_EVENT = IDENTIFIER, "completed" ;
-
-ACTION_TYPE = "start";
 PRINT = "display", "(", EXPRESSION, ")" ;
 
+CONDITIONAL = "if", "(", CONDITION, ")", "{", "\n" , STATEMENT, "}", 
+             [ "else", "{", "\n", STATEMENT, "}" ] ;
 
-EXPRESSION = IDENTIFIER | NUMBER | ARITHMETIC_EXPRESSION ;
-ARITHMETIC_EXPRESSION = EXPRESSION, ("+" | "-" | "*" | "/"), EXPRESSION ;
+CONDITION = EXPRESSION, [ REL_OP, EXPRESSION ]
+          | EXPRESSION ;
+
+REL_OP = "heavier than"
+       | "lighter than"
+       | "same as" ;
+
+ROUTINE_SETUP = "routine", IDENTIFIER, "{", "\n", { EXERCISE_DECLARATIONS }, "}" ;
+
+ROUTINE_DETAIL = "routine_detail", IDENTIFIER, "{", "\n", { WORKOUT_PART }, "}" ;
+
+WORKOUT_PART = WARMUP
+             | COOLDOWN
+             | EXERCISE_ACTION
+             | WORKOUT_PART, ( WARMUP | COOLDOWN | EXERCISE_ACTION ) ;
+
+COOLDOWN = "cooldown", "{", "\n", { EXERCISE_ACTION }, "}", "\n" ;
+
+WARMUP = "warmup", "{", "\n", { EXERCISE_ACTION }, "}", "\n" ;
+
+EXERCISE_ACTION = IDENTIFIER, "start", "\n", "rest", NUMBER, "seconds", "\n",
+                  { EXERCISE_ACTIONS } ;
+
+EXERCISE_DECLARATIONS = { EXERCISE_DECLARATION } ;
+
+EXERCISE_DECLARATION = "exercise", IDENTIFIER, "with", "reps", NUMBER, "sets", NUMBER, "\n" ;
+
+VARIABLE_ASSIGNMENT = "set", IDENTIFIER, "=", EXPRESSION, "\n"  ;
+
+EXPRESSION = IDENTIFIER
+           | NUMBER
+           | STRING
+           | ARITHMETIC_EXPRESSION ;
+
+ARITHMETIC_EXPRESSION = [ "-" ], EXPRESSION, [ ( "+" | "-" | "*" | "/" ), EXPRESSION ]
+                      | "(", EXPRESSION, ")"
+                      | "(", ARITHMETIC_EXPRESSION, ")"
+                      | EXPRESSION, "=", EXPRESSION ;
+
 IDENTIFIER = LETTER, { LETTER | "_" | DIGIT } ;
 NUMBER = DIGIT, { DIGIT } ;
 LETTER = ( "a" | "..." | "z" | "A" | "..." | "Z" ) ;
 DIGIT = ( "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "0" ) ;
+STRING = '"', { IDENTIFIER | NUMBER | LETTER | " " }, '"' ;
 
 
 ```
@@ -109,4 +144,4 @@ display ("You have completed your workout for today")
 
 
 ## SYNTAX DIAGRAM
-![Diagrama Sintático](canvas2.png)
+![Diagrama Sintático](DIAGRAM.png)
