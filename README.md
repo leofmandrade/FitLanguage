@@ -144,4 +144,4 @@ display ("You have completed your workout for today")
 
 
 ## SYNTAX DIAGRAM
-![Diagrama Sintático](DIAGRAM.png)
+![Diagrama Sintático](canvas.png)
