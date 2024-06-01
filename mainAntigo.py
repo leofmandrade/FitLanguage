@@ -7,7 +7,14 @@ import re
 class SymbolTable():
     def __init__(self):
         self.table = {}
+        self.words = ['print', 'if', 'then', 'else', 'while', 'do', 'and', 'or', 'not', 'read', 'end', 'local']
     
+    def word(self, word):
+        if word in self.words:
+            return True
+        else:
+            return False
+
     def get(self, key):
         try:
             return self.table[key]
@@ -29,23 +36,8 @@ class SymbolTable():
         else:
             self.table[key] = (value, tipo)
         
-class FuncTable():
-    # getter e setter de funções (nome, node(self))
-    def __init__(self):
-        self.table = {}
+TabelaSimbolos = SymbolTable()
 
-    def get(self, key):
-        try:
-            return self.table[key]
-        except:
-            sys.stderr.write(f"Error: Undefined function '{key}'\n")
-            sys.exit(1)
-
-    def set(self, key, value):
-        self.table[key] = value
-
-
-TabelaFuncoes = FuncTable()
 
 # representa um token com um tipo e um valor
 class Token():
@@ -69,9 +61,8 @@ class Node():
         self.children = []
 
     @abstractmethod
-    def Evaluate(ST):
+    def Evaluate():
         pass
-
 
 # classe que representa um bloco de código
 class Block(Node):
@@ -82,52 +73,24 @@ class Block(Node):
         else:
             self.children = children
 
-    def Evaluate(self, ST):
+    def Evaluate(self):
         for child in self.children:
-            if child.value == "Return":
-                return child.Evaluate(ST)
-            # print(child)
-            child.Evaluate(ST)
+            child.Evaluate()
 
 
-# classe de declaração de função
-class FuncDec(Node):
-    def Evaluate(self, ST):
-        TabelaFuncoes.set(self.value, self)
-
-
-# classe de chamada de função
-class FuncCall(Node):
-    def Evaluate(self, ST):
-        node = TabelaFuncoes.get(self.value)
-        if len(node.children) - 2 == len(self.children):
-            localST = SymbolTable()
-            
-            # print (node.children[0].value, "VALOR")
-            # print (node.children[1].value, "VALOR")
-            # print (node.children[2].value, "VALOR")
-            # print (node.children[3].value, "VALOR")
-
-            for i in range(1, len(node.children) - 1):
-                localST.create(node.children[i].value)
-                localST.set(node.children[i].value, self.children[i-1].Evaluate(ST)[0], self.children[i-1].Evaluate(ST)[1])
-            return node.children[-1].Evaluate(localST)
-        else:
-            sys.stderr.write("Error: Unexpected number of arguments\n")
-            sys.exit(1)
 
 
 # classe de declaração de variável
 class Assignment(Node):
-    def Evaluate(self, ST):
-        valor = self.children[1].Evaluate(ST)
-        ST.set(self.children[0].value, valor[0], valor[1])
+    def Evaluate(self):
+        valor = self.children[1].Evaluate()
+        TabelaSimbolos.set(self.children[0].value, valor[0], valor[1])
 
 
 # classe de print
 class Print(Node):
-    def Evaluate(self, ST):
-        result = self.children[0].Evaluate(ST)
+    def Evaluate(self):
+        result = self.children[0].Evaluate()
         if result is not None:
             print(result[0])  # Make sure result is not None before accessing it
         else:
@@ -137,17 +100,17 @@ class Print(Node):
 
 # classe de identificador
 class Identifier(Node):
-    def Evaluate(self, ST):
+    def Evaluate(self):
         # get type and value of the identifier
-        return (ST.get(self.value))
+        return (TabelaSimbolos.get(self.value))
     
 
 # binary operation (addition, subtraction, multiplication, division)
 class BinOp(Node):
-    def Evaluate(self, ST):
+    def Evaluate(self):
         valor = self.value
-        child1, type1 = self.children[0].Evaluate(ST)
-        child2, type2 = self.children[1].Evaluate(ST)
+        child1, type1 = self.children[0].Evaluate()
+        child2, type2 = self.children[1].Evaluate()
         # print ("child1", child1, "type1", type1)
         # print ("child2", child2, "type2", type2)
 
@@ -197,14 +160,14 @@ class BinOp(Node):
 
 
 class StrVal(Node):
-    def Evaluate(self, ST):
+    def Evaluate(self):
         return (self.value, "str")
 
 # unary operation (positive, negative)
 class UnOp(Node):
-    def Evaluate(self, ST):
+    def Evaluate(self):
         valor = self.value
-        child, tipo = self.children[0].Evaluate(ST)
+        child, tipo = self.children[0].Evaluate()
 
         if tipo != "int":
             sys.stderr.write("Error: Expected integer\n")
@@ -222,57 +185,52 @@ class UnOp(Node):
         
 # integer value
 class IntVal(Node):
-    def Evaluate(self, ST):
+    def Evaluate(self):
         valor = self.value
         return (int(valor), "int")
     
 # no operation
 class NoOp(Node):
-    def Evaluate(self, ST):
+    def Evaluate(self):
         pass
 
 # while operation
 class WhileOp(Node):
-    def Evaluate(self, ST):
-        while self.children[0].Evaluate(ST)[0]:
+    def Evaluate(self):
+        while self.children[0].Evaluate()[0]:
             for child in self.children[1].children:
-                child.Evaluate(ST)
+                child.Evaluate()
 
 # var declaration
 class VarDec(Node):
     # primeiro filho é o identificador, segundo é o valor, caso tenha. se nao tiver o segundo filho, o valor é none
-    def Evaluate(self, ST):
+    def Evaluate(self):
         # print (self.children[0].value)
         # cria com create. caso tenha valor, seta o valor
-        ST.create(self.children[0].value)
+        TabelaSimbolos.create(self.children[0].value)
         if len(self.children) == 2:
-            valor = self.children[1].Evaluate(ST)
+            valor = self.children[1].Evaluate()
             # print(valor)
-            ST.set(self.children[0].value, valor[0], valor[1])
+            TabelaSimbolos.set(self.children[0].value, valor[0], valor[1])
 
         # print("----------------")
 
 
-class Return(Node):
-    def Evaluate(self, ST):
-        return self.children[0].Evaluate(ST)
-
-
 # if operation
 class IfOp(Node):
-    def Evaluate(self, ST):
-        condicao = self.children[0].Evaluate(ST)
+    def Evaluate(self):
+        condicao = self.children[0].Evaluate()
         if condicao:
             for child in self.children[1].children:
-                child.Evaluate(ST)
+                child.Evaluate()
         else:
             for child in self.children[2].children:
-                child.Evaluate(ST)
+                child.Evaluate()
 
 # função que le um valor
 class Read(Node):
     # no sem filhos. sempre vai ler um int
-    def Evaluate(self, ST):
+    def Evaluate(self):
         return (int(input()), "int")
     
 
@@ -285,16 +243,12 @@ class Tokenizer():
 
     
     def selectNext(self):
-        selectedWords = ['print', 'if', 'then', 'else', 'while', 'do', 'and', 'or', 'not', 'read', 'end', 'local', 'function', 'return']
-
         while self.position < len(self.source) and self.source[self.position] == " ":
             self.position += 1
         
         if self.position == len(self.source):       # se atingir o final da entrada, retorna um token de fim de arquivo (EOF)
             self.next = Token("EOF", "EOF")
-        elif self.source[self.position] == ",":
-            self.next = Token("COMMA", ",")
-            self.position += 1
+
         elif self.source[self.position] == "(":
             self.next = Token("LPAREN", "(")
             self.position += 1
@@ -329,7 +283,7 @@ class Tokenizer():
             while self.position < len(self.source) and (self.source[self.position].isalpha() or self.source[self.position].isdigit() or self.source[self.position] == "_"):
                 identifier += self.source[self.position]
                 self.position += 1
-            if identifier in selectedWords:
+            if TabelaSimbolos.word(identifier):
                 self.next = Token(identifier.upper(), identifier)
             else:
                 self.next = Token("IDENTIFIER", identifier)
@@ -394,6 +348,7 @@ class Parser():
     def parseStatement(self):
         if self.tokenizer.next.type == "PRINT":       #se for print, avança pro próximo token e chama parseBoolExpression()
             self.tokenizer.selectNext()
+
             if self.tokenizer.next.type != "LPAREN":
                 sys.stderr.write("Error: Expected '('")
                 sys.exit(1)
@@ -406,95 +361,17 @@ class Parser():
                 sys.exit(1)
             self.tokenizer.selectNext()
 
-
-        elif self.tokenizer.next.type == "FUNCTION":    
-            # function, depois identifier
-            # depois ( . depois pode ir pro identifier ou pra ). se for pro identifier ou vai pra virgula ou ). 
-            # depois \n, ai pode chamar o parseStatement. depois end e \n
-            self.tokenizer.selectNext()
-            if self.tokenizer.next.type != "IDENTIFIER":
-                sys.stderr.write("Error: Expected identifier")
-                sys.exit(1)
-            result = FuncDec(self.tokenizer.next.value)
-            result.children.append(Identifier((self.tokenizer.next.value)))
-
-            self.tokenizer.selectNext()
-            if self.tokenizer.next.type != "LPAREN":
-                sys.stderr.write("Error: Expected '('")
-                sys.exit(1)
-            self.tokenizer.selectNext()
-
-            while self.tokenizer.next.type != "RPAREN":
-                if self.tokenizer.next.type != "IDENTIFIER":
-                    sys.stderr.write("Error: Expected identifier")
-                    sys.exit(1)
-                result.children.append(Identifier(self.tokenizer.next.value))
-                self.tokenizer.selectNext()
-                if self.tokenizer.next.type == "COMMA":
-                    self.tokenizer.selectNext()
-
-            if self.tokenizer.next.type != "RPAREN":
-                sys.stderr.write("Error: Expected ')'")
-                sys.exit(1)
-            self.tokenizer.selectNext()
-
-            if self.tokenizer.next.type != "SKIPLINE":
-                sys.stderr.write("Error: Expected newline")
-                sys.exit(1)
-            self.tokenizer.selectNext()
-
-            bloco = Block("Block")
-            while self.tokenizer.next.type != "END" and self.tokenizer.next.type != "EOF":
-                bloco.children.append(self.parseStatement())
-            if self.tokenizer.next.type == "EOF":
-                sys.stderr.write("Error: Expected 'end'")
-                sys.exit(1)
-            result.children.append(bloco)
-            if self.tokenizer.next.type != "END":
-                sys.stderr.write("Error: Expected 'end'")
-                sys.exit(1)
-            self.tokenizer.selectNext()
-            if self.tokenizer.next.type != "SKIPLINE" and self.tokenizer.next.type != "EOF":
-                sys.stderr.write("Error: Expected newline")
-                sys.exit(1)
-
-        elif self.tokenizer.next.type == "RETURN":
-            # chama o parseBoolExpression 
-            self.tokenizer.selectNext()
-            result = Return("Return")
-            result.children.append(self.parseBoolExpression())
-            if self.tokenizer.next.type != "SKIPLINE":
-                sys.stderr.write("Error: Expected newline")
-                sys.exit(1)
-            self.tokenizer.selectNext()
-
-
         elif self.tokenizer.next.type == "IDENTIFIER":      #se for identificador, avança pro próximo token e chama parseBoolExpression()
-            ident = Identifier(self.tokenizer.next.value)
+            atual = self.tokenizer.next
             self.tokenizer.selectNext()
-            if self.tokenizer.next.type == "ASSIGN":
-                
-                self.tokenizer.selectNext()
-                result = Assignment("Assignment")
-                result.children.append(ident)
-                result.children.append(self.parseBoolExpression())
-            elif self.tokenizer.next.type == "LPAREN":
-                self.tokenizer.selectNext()
-                result = FuncCall(ident.value)
-                
-                if self.tokenizer.next.type != "RPAREN":
-                    result.children.append(self.parseBoolExpression())
-                    while self.tokenizer.next.type == "COMMA":
-                        self.tokenizer.selectNext()
-                        result.children.append(self.parseBoolExpression())
-                if self.tokenizer.next.type != "RPAREN":
-                    sys.stderr.write("Error: Expected ')'")
-                    sys.exit(1)
-                self.tokenizer.selectNext()
-            else:
-                sys.stderr.write("Error: Unexpected character\n")
+            if self.tokenizer.next.type != "ASSIGN":
+                sys.stderr.write("Error: Expected '='")
                 sys.exit(1)
-
+            self.tokenizer.selectNext()
+            result = Assignment("Assignment")
+            result.children.append(Identifier(atual.value))
+            result.children.append(self.parseBoolExpression())
+            
         elif self.tokenizer.next.type == "LOCAL":       #se for local, avança pro próximo token e chama parseStatement()
             self.tokenizer.selectNext()
             if self.tokenizer.next.type != "IDENTIFIER":
@@ -627,7 +504,6 @@ class Parser():
             node.children.append(result)
             node.children.append(self.parseExpression())
             result = node
-        
         return result
 
 
@@ -636,6 +512,8 @@ class Parser():
         result = self.parseTerm()
         while self.tokenizer.next.type == "PLUS" or self.tokenizer.next.type == "MINUS" or self.tokenizer.next.type == "CONCAT":
             operation = self.tokenizer.next
+
+            self.tokenizer.selectNext()
             if operation.type == "PLUS":
                 node = BinOp("+")
             elif operation.type == "MINUS":
@@ -643,10 +521,8 @@ class Parser():
             elif operation.type == "CONCAT":
                 node = BinOp("..")
             node.children.append(result)
-            self.tokenizer.selectNext()
             node.children.append(self.parseTerm())
             result = node
-
         return result
 
     # function que analisa um termo
@@ -669,7 +545,6 @@ class Parser():
     # function que analisa um fator
     def parseFactor(self):
         operation = self.tokenizer.next
-
         if operation.type == "NUMBER":      #se for número, avança pro próximo token e retorna o valor do número
             self.tokenizer.selectNext()
             return IntVal(operation.value)
@@ -678,24 +553,9 @@ class Parser():
             self.tokenizer.selectNext()
             return StrVal(operation.value)
         
-        elif operation.type == "IDENTIFIER":   
-            ident = Identifier(self.tokenizer.next.value)
-
+        elif operation.type == "IDENTIFIER":    #se for identificador, avança pro próximo token e retorna o valor do identificador
             self.tokenizer.selectNext()
-            if self.tokenizer.next.type == "LPAREN":
-                self.tokenizer.selectNext()
-                result = FuncCall(ident.value)
-                while self.tokenizer.next.type != "RPAREN":
-                    result.children.append(self.parseBoolExpression())
-                    if self.tokenizer.next.type == "COMMA":
-                        self.tokenizer.selectNext()
-                if self.tokenizer.next.type != "RPAREN":
-                    sys.stderr.write("Error: Expected ')'")
-                    sys.exit(1)
-                self.tokenizer.selectNext()
-            else:
-                result = Identifier(operation.value)
-            return result
+            return Identifier(operation.value)
         
         elif operation.type == "PLUS":      #se for adição, avança pro próximo token e chama parseFactor()
             self.tokenizer.selectNext()
@@ -739,9 +599,8 @@ class Parser():
                 sys.stderr.write("Error: Expected ')'")
                 sys.exit(1)
 
-
         else:
-            sys.stderr.write("Error: Expected number or '(', received "+ operation.value)
+            sys.stderr.write("Error: Expected number or '('")
             sys.exit(1)
 
     
@@ -751,18 +610,23 @@ class Parser():
 
     def run(code):
         code = PrePro().filter(code)
+        # print("Filtered code:", code)
 
         tokenizer = Tokenizer(code, 0)
+        
+        # print("Tokenizer initialized")
+        # print("Tokens:")
         # while tokenizer.next.type != "EOF":
+        #     print(tokenizer.next.value)
         #     tokenizer.selectNext()
 
         parser = Parser(tokenizer)
         result = parser.parseBlock()
-    
+
+
         if tokenizer.next.type != "EOF":
             sys.stderr.write("Error: Unexpected character\n")
             sys.exit(1)
-
         return result
 
 
@@ -771,8 +635,7 @@ class Parser():
 
 def main(code):
     root_node = Parser.run(code)
-    ST = SymbolTable()
-    return root_node.Evaluate(ST)
+    return root_node.Evaluate()
 
 if __name__ == "__main__":
     # entrada é "main.py [arquivo]" 
