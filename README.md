@@ -79,11 +79,6 @@ during a heavier_than 1 do
     workout_finished
 
 
-workout_day a same_as 1:
-    display(a)
-    workout_finished
-
-
 workout_day a heavier_than 1:
     display(a)
 rest_day:
@@ -94,7 +89,6 @@ rest_day:
 weight sets = 4
 workout_day sets heavier_than 3 :
     display ("You are pushing yourself!")
-rest_day :
     display ("You can do more sets!")
     workout_finished
 
@@ -107,6 +101,7 @@ during squat heavier_than benchpress do
     squat = squat less_load 5
     display (squat)
     workout_finished
+
 ```
 
 
