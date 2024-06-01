@@ -34,3 +34,5 @@ during squat heavier_than benchpress do
     display (squat)
     workout_finished
 
+weight input = receive()
+display(input)
