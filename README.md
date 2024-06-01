@@ -40,7 +40,7 @@ ASSIGNMENT = IDENTIFIER, "=", EXPRESSION ;
 LOCAL = "weight", IDENTIFIER, ("λ" | ("=", BOOL_EXP));
 PRINT = "display", "(", EXPRESSION, ")" ;
 WHILE = "during", BOOL_EXP, "do", "\n", "λ", { ( STATEMENT ), "λ" }, "workout finished";
-IF = "workout day", BOOL_EXP, ":", "\n", "λ", { ( STATEMENT ), "λ" }, ( "λ" | ( "rest day", "\n", "λ", { ( STATEMENT ), "λ" })), "workout finished" ;
+IF = "workout day", BOOL_EXP, ":", "\n", "λ", { ( STATEMENT ), "λ" }, ( "λ" | ( "rest day", ":", "\n", "λ", { ( STATEMENT ), "λ" })), "workout finished" ;
 BOOL_EXP = BOOL_TERM, { ("or"), BOOL_TERM } ;
 BOOL_TERM = REL_EXP, { ("and"), REL_EXP } ;
 REL_EXP = EXPRESSION, { ("same as" | "heavier than" | "lighter than"), EXPRESSION } ;
