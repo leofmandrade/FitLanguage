@@ -2,34 +2,44 @@
 #### Leonardo da França Moura de Andrade
 
 ---
+### OBJETIVOS
+Criar uma Linguagem de Programação.
+A linguagem deve ter todas as estruturas básicas de uma linguagem de programação: variáveis, condições e loops.
 
-## OBJECTIVES
-1. Create a Programming Language.
-2. The language must have all the basics structures of a programming language: variables, conditions and loops.
+### DESCRIÇÃO
+
+**Motivação:** 
+- A linguagem foi projetada para ser intuitiva e bem simples, com o objetivo de ser usada no contexto de exercícios físicos e academia, onde o usuário pode criar um plano de treino.
+
+**Curiosidades:**
+- Terminologia de Fitness: As palavras-chave da linguagem foram escolhidas para refletir termos comuns usados em academias e treinos. Por exemplo, weight para definir variáveis, display para imprimir mensagens, e workout_finished para terminar blocos de código.
+- Simplicidade: A linguagem busca ser simples e direta, permitindo que usuários sem experiência em programação possam aprender e utilizá-la rapidamente.
 
 ---
-## DESCRIPTION
-1. Motivation: The language was created to be used in the context of physical exercises, where the user can create a workout plan.
-   
-2. The language has the following structures:
-    - Variables: The user can create variables and assign values to them.
-    - Conditions: The user can create conditions to execute a block of code.
-    - Loops: The user can create loops to execute a block of code multiple times.
-    - Print: The user can print a message to the console.
-      
-4. The language has the following keywords, in a context of .lua:
-    - while -> during
-    - if -> workout_day
-    - else -> rest_day
-    - print -> display
-    - end -> workout_finished
-    - local -> weight
-    - Add (+) -> more_load
-    - Sub (-) -> less_load
-    - Equal (==) -> same_as
-    - Greater (>) -> heavier_than
-    - Less (<) -> lighter_than
-    - Not, and, or, * and / -> same_as in .lua
+
+A linguagem possui as seguintes estruturas:
+
+- **Variáveis:** O usuário pode criar variáveis e atribuir valores a elas.
+- **Condições:** O usuário pode criar condições para executar um bloco de código.
+- **Loops:** O usuário pode criar loops para executar um bloco de código várias vezes.
+- **Impressão:** O usuário pode imprimir uma mensagem no console.
+
+
+
+A linguagem possui as seguintes palavras-chave, no contexto do .lua:
+- **while** -> **during**
+- **if** -> **workout_day**
+- **else** -> **rest_day**
+- **print** -> **display**
+- **end** -> **workout_finished**
+- **local** -> **weight**
+- **Add (+)** -> **more_load**
+- **Sub (-)** -> **less_load**
+- **Equal (==)** -> **same_as**
+- **Greater (>)** -> **heavier_than**
+- **Less (<)** -> **lighter_than**
+- **Not, and, or, \*, /** -> **same_as** no .lua
+
 
 ---
 
@@ -58,13 +68,10 @@ DIGIT = ( "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "0" ) ;
 ---
 
 
-bison parser.y -Wcounterexamples
-gcc lex.yy.c parser.tab.c -o myparser -lfl
-./myparser < test.fit
+### Exemplo Completo com Base na EBNF
 
+Aqui está um exemplo completo de um código escrito nessa nova linguagem:
 
-
-### CODE EXAMPLES
 ```python
 display(2)
 display("hello")
@@ -104,7 +111,24 @@ during squat heavier_than benchpress do
 
 ```
 
+---
+### Flex e Bison
+Para a construção do analisador léxico e sintático, foram utilizadas as ferramentjsons Flex e Bison.
+```bash
+flex lexer.l
+bison parser.y -Wcounterexamples
+gcc lex.yy.c parser.tab.c -o myparser -lfl
+./myparser < test.fit
+```
+---
+### Para rodar o programa do compilador
+```bash
+python main.py test.fit
+```
+
+---
 
 
-## SYNTAX DIAGRAM
+
+### SYNTAX DIAGRAM
 ![Diagrama Sintático](canvas.png)
