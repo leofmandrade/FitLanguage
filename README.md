@@ -38,7 +38,7 @@ A linguagem possui as seguintes palavras-chave, no contexto do .lua:
 - **Equal (==)** -> **same_as**
 - **Greater (>)** -> **heavier_than**
 - **Less (<)** -> **lighter_than**
-- **Not, and, or, \*, /** -> **same_as** no .lua
+- **Not, and, or, \*, /** -> o mesmo que no .lua
 
 
 ---
