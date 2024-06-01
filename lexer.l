@@ -10,19 +10,18 @@
 "display"                       { printf("display\n"); return DISPLAY; }
 "during"                        { printf("during\n"); return DURING; }
 "do"                            { printf("do\n"); return DO; }
-"workout finished"              { printf("workout finished\n"); return WORKOUT_FINISHED; }
-"workout day"                   { printf("workout day\n"); return WORKOUT_DAY; }
-"rest day"                      { printf("rest day\n"); return REST_DAY; }
+"workout_finished"              { printf("workout_finished\n"); return WORKOUT_FINISHED; }
+"workout_day"                   { printf("workout_day\n"); return WORKOUT_DAY; }
+"rest_day"                      { printf("rest_day\n"); return REST_DAY; }
+"same_as"                       { printf("same_as\n"); return SAME_AS; }
+"heavier_than"                  { printf("heavier_than\n"); return HEAVIER_THAN; }
+"lighter_than"                  { printf("lighter_than\n"); return LIGHTER_THAN; }
+"more_load"                     { printf("more_load\n"); return MORE_LOAD; }
+"less_load"                     { printf("less_load\n"); return LESS_LOAD; }
 "or"                            { printf("or\n"); return OR; }
 "and"                           { printf("and\n"); return AND; }
-"same as"                       { printf("same as\n"); return SAME_AS; }
-"heavier than"                  { printf("heavier than\n"); return HEAVIER_THAN; }
-"lighter than"                  { printf("lighter than\n"); return LIGHTER_THAN; }
-"more load"                     { printf("more load\n"); return MORE_LOAD; }
-"less load"                     { printf("less load\n"); return LESS_LOAD; }
 "not"                           { printf("not\n"); return NOT; }
 "receive"                       { printf("receive\n"); return RECEIVE; }    
-
 [ \t]+                          { printf("SPACE\n"); }
 \n                              { printf("NEWLINE\n"); return NEWLINE; }
 "{"                             { printf("LBRACE\n"); return LBRACE; }

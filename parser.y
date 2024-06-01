@@ -24,9 +24,6 @@ void yyerror(const char *s);
 %left NOT
 
 %%
-/* EBNF
-IF = "workout day", BOOL_EXP, ":", "\n", "λ", { ( STATEMENT ), "λ" }, ( "λ" | ( "rest day", "\n", "λ", { ( STATEMENT ), "λ" })), "workout finished" ;
-*/
 
 block: 
     statement

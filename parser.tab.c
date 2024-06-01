@@ -614,10 +614,10 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    32,    32,    39,    40,    41,    42,    43,    44,    45,
-      53,    54,    64,    72,    73,    81,    82,    90,    91,    92,
-     101,   110,   111,   119,   127,   128,   129,   130,   138,   139,
-     140,   148,   149,   150,   151,   152,   153,   154,   155
+       0,    29,    29,    36,    37,    38,    39,    40,    41,    42,
+      50,    51,    61,    69,    70,    78,    79,    87,    88,    89,
+      98,   107,   108,   116,   124,   125,   126,   127,   135,   136,
+     137,   145,   146,   147,   148,   149,   150,   151,   152
 };
 #endif
 
@@ -1223,7 +1223,7 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* block: statement  */
-#line 34 "parser.y"
+#line 31 "parser.y"
     {
         printf("Entrou na regra 'block'\n");
     }
@@ -1231,7 +1231,7 @@ yyreduce:
     break;
 
   case 9: /* statement: statement NEWLINE  */
-#line 47 "parser.y"
+#line 44 "parser.y"
     {
         printf("Entrou na regra 'statement'\n");
     }
@@ -1239,7 +1239,7 @@ yyreduce:
     break;
 
   case 11: /* if: WORKOUT_DAY bool_expression COLON NEWLINE block WORKOUT_FINISHED  */
-#line 56 "parser.y"
+#line 53 "parser.y"
     {
         printf("Entrou na regra 'if'\n");
     }
@@ -1247,7 +1247,7 @@ yyreduce:
     break;
 
   case 12: /* while: DURING bool_expression DO NEWLINE block WORKOUT_FINISHED  */
-#line 66 "parser.y"
+#line 63 "parser.y"
     {
         printf("Entrou na regra 'while'\n");
     }
@@ -1255,7 +1255,7 @@ yyreduce:
     break;
 
   case 14: /* bool_expression: bool_term OR bool_term  */
-#line 75 "parser.y"
+#line 72 "parser.y"
     {
         printf("Entrou na regra 'bool_expression'\n");
     }
@@ -1263,7 +1263,7 @@ yyreduce:
     break;
 
   case 16: /* bool_term: rel_expression AND rel_expression  */
-#line 84 "parser.y"
+#line 81 "parser.y"
     {
         printf("Entrou na regra 'bool_term'\n");
     }
@@ -1271,7 +1271,7 @@ yyreduce:
     break;
 
   case 19: /* rel_expression: expression LIGHTER_THAN expression  */
-#line 94 "parser.y"
+#line 91 "parser.y"
     {
         printf("Entrou na regra 'rel_expression'\n");
     }
@@ -1279,7 +1279,7 @@ yyreduce:
     break;
 
   case 20: /* assignment: IDENTIFIER EQUALS expression  */
-#line 103 "parser.y"
+#line 100 "parser.y"
     {
         printf("Entrou na regra 'assignment'\n");
     }
@@ -1287,7 +1287,7 @@ yyreduce:
     break;
 
   case 22: /* local: WEIGHT IDENTIFIER EQUALS expression  */
-#line 113 "parser.y"
+#line 110 "parser.y"
     {
         printf("Entrou na regra 'local'\n");
     }
@@ -1295,7 +1295,7 @@ yyreduce:
     break;
 
   case 23: /* print: DISPLAY LPAREN expression RPAREN  */
-#line 121 "parser.y"
+#line 118 "parser.y"
     {
         printf("Entrou na regra 'print'\n");
     }
@@ -1303,7 +1303,7 @@ yyreduce:
     break;
 
   case 27: /* expression: term  */
-#line 132 "parser.y"
+#line 129 "parser.y"
     {
         printf("Entrou na regra 'expression'\n");
     }
@@ -1311,7 +1311,7 @@ yyreduce:
     break;
 
   case 30: /* term: factor  */
-#line 142 "parser.y"
+#line 139 "parser.y"
     {
         printf("Entrou na regra 'term'\n");
     }
@@ -1319,7 +1319,7 @@ yyreduce:
     break;
 
   case 38: /* factor: RECEIVE LPAREN RPAREN  */
-#line 157 "parser.y"
+#line 154 "parser.y"
     {
         printf("Entrou na regra 'factor'\n");
     }
@@ -1520,7 +1520,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 164 "parser.y"
+#line 161 "parser.y"
 
 
 void yyerror(const char *s) {
