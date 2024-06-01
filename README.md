@@ -113,7 +113,7 @@ during squat heavier_than benchpress do
 
 ---
 ### Flex e Bison
-Para a construção do analisador léxico e sintático, foram utilizadas as ferramentjsons Flex e Bison.
+Para a construção do analisador léxico e sintático, foram utilizadas as ferramentas Flex e Bison.
 ```bash
 flex lexer.l
 bison parser.y -Wcounterexamples
