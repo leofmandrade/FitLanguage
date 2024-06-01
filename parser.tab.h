@@ -54,41 +54,36 @@ extern int yydebug;
     YYEOF = 0,                     /* "end of file"  */
     YYerror = 256,                 /* error  */
     YYUNDEF = 257,                 /* "invalid token"  */
-    IDENTIFIER = 258,              /* IDENTIFIER  */
-    STRING = 259,                  /* STRING  */
-    NUMBER = 260,                  /* NUMBER  */
-    ROUTINE = 261,                 /* ROUTINE  */
-    ROUTINE_DETAIL = 262,          /* ROUTINE_DETAIL  */
-    EXERCISE = 263,                /* EXERCISE  */
-    WITH = 264,                    /* WITH  */
-    REPS = 265,                    /* REPS  */
-    SETS = 266,                    /* SETS  */
-    START = 267,                   /* START  */
-    CONTINUE = 268,                /* CONTINUE  */
-    INCREASE = 269,                /* INCREASE  */
-    COMPLETED = 270,               /* COMPLETED  */
-    WARMUP = 271,                  /* WARMUP  */
-    COOLDOWN = 272,                /* COOLDOWN  */
-    DISPLAY = 273,                 /* DISPLAY  */
-    IF = 274,                      /* IF  */
-    WHILE = 275,                   /* WHILE  */
-    SAME_AS = 276,                 /* SAME_AS  */
-    HEAVIER_THAN = 277,            /* HEAVIER_THAN  */
-    LIGHTER_THAN = 278,            /* LIGHTER_THAN  */
-    SET = 279,                     /* SET  */
-    REST = 280,                    /* REST  */
-    SECONDS = 281,                 /* SECONDS  */
-    ELSE = 282,                    /* ELSE  */
-    LBRACE = 283,                  /* LBRACE  */
-    RBRACE = 284,                  /* RBRACE  */
-    LPAREN = 285,                  /* LPAREN  */
-    RPAREN = 286,                  /* RPAREN  */
-    EQUALS = 287,                  /* EQUALS  */
-    PLUS = 288,                    /* PLUS  */
-    MINUS = 289,                   /* MINUS  */
-    MULT = 290,                    /* MULT  */
-    DIV = 291,                     /* DIV  */
-    NEWLINE = 292                  /* NEWLINE  */
+    WEIGHT = 258,                  /* WEIGHT  */
+    DISPLAY = 259,                 /* DISPLAY  */
+    DURING = 260,                  /* DURING  */
+    DO = 261,                      /* DO  */
+    WORKOUT_FINISHED = 262,        /* WORKOUT_FINISHED  */
+    WORKOUT_DAY = 263,             /* WORKOUT_DAY  */
+    REST_DAY = 264,                /* REST_DAY  */
+    OR = 265,                      /* OR  */
+    AND = 266,                     /* AND  */
+    SAME_AS = 267,                 /* SAME_AS  */
+    HEAVIER_THAN = 268,            /* HEAVIER_THAN  */
+    LIGHTER_THAN = 269,            /* LIGHTER_THAN  */
+    MORE_LOAD = 270,               /* MORE_LOAD  */
+    LESS_LOAD = 271,               /* LESS_LOAD  */
+    NOT = 272,                     /* NOT  */
+    RECEIVE = 273,                 /* RECEIVE  */
+    LBRACE = 274,                  /* LBRACE  */
+    RBRACE = 275,                  /* RBRACE  */
+    LPAREN = 276,                  /* LPAREN  */
+    RPAREN = 277,                  /* RPAREN  */
+    EQUALS = 278,                  /* EQUALS  */
+    LAMBDA = 279,                  /* LAMBDA  */
+    COLON = 280,                   /* COLON  */
+    DOTDOT = 281,                  /* DOTDOT  */
+    MULT = 282,                    /* MULT  */
+    DIV = 283,                     /* DIV  */
+    IDENTIFIER = 284,              /* IDENTIFIER  */
+    NUMBER = 285,                  /* NUMBER  */
+    STRING = 286,                  /* STRING  */
+    NEWLINE = 287                  /* NEWLINE  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -102,7 +97,7 @@ union YYSTYPE
     int num;     // For numeric values
     char* str;   // For string values
 
-#line 106 "parser.tab.h"
+#line 101 "parser.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

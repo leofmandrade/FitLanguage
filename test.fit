@@ -1,44 +1,41 @@
-routine FullBodyRoutine {
-    exercise Burpees with reps 10 sets 3
-    exercise Squats with reps 10 sets 3
-    exercise Deadlifts with reps 10 sets 3
-    exercise Pullups with reps 10 sets 3
-    exercise Pushups with reps 10 sets 3
-    exercise Planks with reps 10 sets 3
-}
-
-routine ChestDay {
-    exercise BenchPress with reps 10 sets 3
-    exercise InclineBenchPress with reps 10 sets 3
-    exercise DumbbellFlyes with reps 10 sets 3
-}
-
-routine_detail FullBodyRoutine {
-    warmup {
-        pushups start 
-        rest 30 seconds
-        jumping_jacks start
-        rest 30 seconds
-    }
-    cooldown {
-        stretching start
-        rest 10 seconds
-    }
-}
-
-set LegDay = ChestDay + 1
-if (LegDay heavier than ChestDay) {
-    ChestDay increase
-} else {
-    ChestDay completed
-}
+display(2)
+display("hello")
+display(4 more load 1)
 
 
-set ShoulderLoad = 15
-set BackLoad = 70
-while (ShoulderLoad lighter than BackLoad) {
-    ShoulderLoad = ShoulderLoad + 5
-}
+weight a = 2 less load 1
+a = less load 50
+during a heavier than 1 do 
+    a = 1
+    display(a)
+    workout finished
 
 
-display ("You have completed your workout for today")
+workout day a same as 1:
+    display(a)
+    workout finished
+
+
+workout day a heavier than 1:
+    display(a)
+rest day:
+    display(a)
+    workout finished
+
+
+weight sets = 4
+workout day sets heavier than 3 :
+    display ("You are pushing yourself!")
+rest day :
+    display ("You can do more sets!")
+    workout finished
+
+
+weight benchpress = 30
+weight squat = 50
+weight deadlift = 60
+during squat heavier than benchpress do
+    display ("You are stronger in squats!")
+    squat = squat less load 5
+    display (squat)
+    workout finished

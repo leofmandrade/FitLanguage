@@ -9,139 +9,106 @@
 
 ---
 ## DESCRIPTION
-1. Motivation: This language was developed to cater specifically to the fitness industry, facilitating the design and management of comprehensive workout programs.
+1. Motivation: The language was created to be used in the context of physical exercises, where the user can create a workout plan.
    
 2. The language has the following structures:
     - Variables: The user can create variables and assign values to them.
     - Conditions: The user can create conditions to execute a block of code.
     - Loops: The user can create loops to execute a block of code multiple times.
     - Print: The user can print a message to the console.
+      
+4. The language has the following keywords, in a context of .lua:
+    - while -> during
+    - if -> workout day
+    - print -> display
+    - end -> workout finished
+    - local -> weight
+    - Add (+) -> more load
+    - Sub (-) -> less load
+    - Equal (==) -> same as
+    - Greater (>) -> heavier than
+    - Less (<) -> lighter than
+    - Not, and, or, * and / -> same as in .lua
+
 ---
 
 ## EBNF
 ```bash
-BLOCK = STATEMENT, { STATEMENT } ;
-
-STATEMENT = ROUTINE_SETUP
-          | ROUTINE_DETAIL
-          | VARIABLE_ASSIGNMENT
-          | CONDITIONAL
-          | EXERCISE_ACTION
-          | PRINT
-          | PROGRESS_EVENT
-          | LOOP
-          | EXPRESSION
-          | STATEMENT, "\n"
-;
-
-LOOP = "while", "(", CONDITION, ")", "{", "\n", STATEMENT, "}" ;
-
-PROGRESS_EVENT = IDENTIFIER, ("continue" | "increase" | "completed"),  "\n" ;
-
+BLOCK = { STATEMENT };
+STATEMENT = ( "λ" | ASSIGNMENT | LOCAL | PRINT | WHILE | IF ), "\n" ;
+ASSIGNMENT = IDENTIFIER, "=", EXPRESSION ;
+LOCAL = "weight", IDENTIFIER, ("λ" | ("=", BOOL_EXP));
 PRINT = "display", "(", EXPRESSION, ")" ;
-
-CONDITIONAL = "if", "(", CONDITION, ")", "{", "\n" , STATEMENT, "}", 
-             [ "else", "{", "\n", STATEMENT, "}" ] ;
-
-CONDITION = EXPRESSION, [ REL_OP, EXPRESSION ]
-          | EXPRESSION ;
-
-REL_OP = "heavier than"
-       | "lighter than"
-       | "same as" ;
-
-ROUTINE_SETUP = "routine", IDENTIFIER, "{", "\n", { EXERCISE_DECLARATIONS }, "}" ;
-
-ROUTINE_DETAIL = "routine_detail", IDENTIFIER, "{", "\n", { WORKOUT_PART }, "}" ;
-
-WORKOUT_PART = WARMUP
-             | COOLDOWN
-             | EXERCISE_ACTION
-             | WORKOUT_PART, ( WARMUP | COOLDOWN | EXERCISE_ACTION ) ;
-
-COOLDOWN = "cooldown", "{", "\n", { EXERCISE_ACTION }, "}", "\n" ;
-
-WARMUP = "warmup", "{", "\n", { EXERCISE_ACTION }, "}", "\n" ;
-
-EXERCISE_ACTION = IDENTIFIER, "start", "\n", "rest", NUMBER, "seconds", "\n",
-                  { EXERCISE_ACTIONS } ;
-
-EXERCISE_DECLARATIONS = { EXERCISE_DECLARATION } ;
-
-EXERCISE_DECLARATION = "exercise", IDENTIFIER, "with", "reps", NUMBER, "sets", NUMBER, "\n" ;
-
-VARIABLE_ASSIGNMENT = "set", IDENTIFIER, "=", EXPRESSION, "\n"  ;
-
-EXPRESSION = IDENTIFIER
-           | NUMBER
-           | STRING
-           | ARITHMETIC_EXPRESSION ;
-
-ARITHMETIC_EXPRESSION = [ "-" ], EXPRESSION, [ ( "+" | "-" | "*" | "/" ), EXPRESSION ]
-                      | "(", EXPRESSION, ")"
-                      | "(", ARITHMETIC_EXPRESSION, ")"
-                      | EXPRESSION, "=", EXPRESSION ;
-
-IDENTIFIER = LETTER, { LETTER | "_" | DIGIT } ;
+WHILE = "during", BOOL_EXP, "do", "\n", "λ", { ( STATEMENT ), "λ" }, "workout finished";
+IF = "workout day", BOOL_EXP, ":", "\n", "λ", { ( STATEMENT ), "λ" }, ( "λ" | ( "rest day", "\n", "λ", { ( STATEMENT ), "λ" })), "workout finished" ;
+BOOL_EXP = BOOL_TERM, { ("or"), BOOL_TERM } ;
+BOOL_TERM = REL_EXP, { ("and"), REL_EXP } ;
+REL_EXP = EXPRESSION, { ("same as" | "heavier than" | "lighter than"), EXPRESSION } ;
+EXPRESSION = TERM, { ("more load" | "less load" | ".."), TERM } ;
+TERM = FACTOR, { ("*" | "/"), FACTOR } ;
+FACTOR = NUMBER | STRING | IDENTIFIER | (("more load" | "less load" | "not"), FACTOR ) | "(", EXPRESSION, ")" | "receive", "(", ")" ;
+IDENTIFIER = LETTER, { LETTER | DIGIT | "_" } ;
 NUMBER = DIGIT, { DIGIT } ;
+STRING = '"', { LETTER | DIGIT }, '"' ;
 LETTER = ( "a" | "..." | "z" | "A" | "..." | "Z" ) ;
 DIGIT = ( "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "0" ) ;
-STRING = '"', { IDENTIFIER | NUMBER | LETTER | " " }, '"' ;
-
 
 ```
 ---
 
+
+bison parser.y -Wcounterexamples
+gcc lex.yy.c parser.tab.c -o myparser -lfl
+./myparser < test.fit
+
+
+
 ### CODE EXAMPLES
 ```python
-routine FullBodyRoutine {
-    exercise Burpees with reps 10 sets 3
-    exercise Squats with reps 10 sets 3
-    exercise Deadlifts with reps 10 sets 3
-    exercise Pullups with reps 10 sets 3
-    exercise Pushups with reps 10 sets 3
-    exercise Planks with reps 10 sets 3
-}
-
-routine ChestDay {
-    exercise BenchPress with reps 10 sets 3
-    exercise InclineBenchPress with reps 10 sets 3
-    exercise DumbbellFlyes with reps 10 sets 3
-}
-
-routine_detail FullBodyRoutine {
-    warmup {
-        pushups start 
-        rest 30 seconds
-        jumping_jacks start
-        rest 30 seconds
-    }
-    cooldown {
-        stretching start
-        rest 10 seconds
-    }
-}
-
-set LegDay = ChestDay + 1
-if (LegDay heavier than ChestDay) {
-    ChestDay increase
-} else {
-    ChestDay completed
-}
+display(2)
+display("hello")
+display(4 more load 1)
 
 
-set ShoulderLoad = 15
-set BackLoad = 70
-while (ShoulderLoad lighter than BackLoad) {
-    ShoulderLoad = ShoulderLoad + 5
-}
+weight a = 2 less load 1
+a = less load 50
+during a heavier than 1 do 
+    a = 1
+    display(a)
+    workout finished
 
 
-display ("You have completed your workout for today")
+workout day a same as 1:
+    display(a)
+    workout finished
+
+
+workout day a heavier than 1:
+    display(a)
+rest day:
+    display(a)
+    workout finished
+
+
+weight sets = 4
+workout day sets heavier than 3 :
+    display ("You are pushing yourself!")
+rest day :
+    display ("You can do more sets!")
+    workout finished
+
+
+weight benchpress = 30
+weight squat = 50
+weight deadlift = 60
+during squat heavier than benchpress do
+    display ("You are stronger in squats!")
+    squat = squat less load 5
+    display (squat)
+    workout finished
 ```
 
 
 
-
 ## SYNTAX DIAGRAM
-![Diagrama Sintático](canvas.png)
+![Diagrama Sintático](image.png)

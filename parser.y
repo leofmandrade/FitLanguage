@@ -11,135 +11,159 @@ void yyerror(const char *s);
     char* str;   // For string values
 }
 
-%token <str> IDENTIFIER STRING
-%token <num> NUMBER
-%token ROUTINE ROUTINE_DETAIL EXERCISE WITH REPS SETS START CONTINUE INCREASE COMPLETED WARMUP COOLDOWN DISPLAY IF WHILE SAME_AS HEAVIER_THAN LIGHTER_THAN SET REST SECONDS ELSE
-%token LBRACE RBRACE LPAREN RPAREN EQUALS PLUS MINUS MULT DIV NEWLINE
+%token WEIGHT DISPLAY DURING DO WORKOUT_FINISHED WORKOUT_DAY REST_DAY OR AND
+%token SAME_AS HEAVIER_THAN LIGHTER_THAN MORE_LOAD LESS_LOAD NOT RECEIVE
+%token LBRACE RBRACE LPAREN RPAREN EQUALS LAMBDA COLON DOTDOT MULT DIV IDENTIFIER NUMBER STRING
+%token NEWLINE
 
-%type <num> expression condition
-
-%left PLUS MINUS
+%left OR
+%left AND
+%left SAME_AS HEAVIER_THAN LIGHTER_THAN
+%left MORE_LOAD LESS_LOAD DOTDOT
 %left MULT DIV
-%nonassoc LPAREN RPAREN
-
+%left NOT
 
 %%
+/* EBNF
+IF = "workout day", BOOL_EXP, ":", "\n", "λ", { ( STATEMENT ), "λ" }, ( "λ" | ( "rest day", "\n", "λ", { ( STATEMENT ), "λ" })), "workout finished" ;
+*/
+
 block: 
     statement
-    | block statement
+
+    {
+        printf("Entrou na regra 'block'\n");
+    }
     ;
-;
 
 statement:
-    routine_setup 
-    | routine_detail
-    | variable_assignment
-    | conditional
-    | exercise_action
-    | print
-    | progress_event
-    | loop
-    | expression
+    | statement print
+    | statement local
+    | statement assignment
+    | statement while
+    | statement if
     | statement NEWLINE
-;
 
-loop:
-    WHILE LPAREN condition RPAREN LBRACE NEWLINE statement RBRACE
-;
+    {
+        printf("Entrou na regra 'statement'\n");
+    }
+    ;
 
-progress_event:
-    IDENTIFIER CONTINUE NEWLINE
-    | IDENTIFIER INCREASE NEWLINE
-    | IDENTIFIER COMPLETED NEWLINE
-;
+if:
+    WORKOUT_DAY bool_expression COLON NEWLINE block REST_DAY COLON NEWLINE block WORKOUT_FINISHED
+    | WORKOUT_DAY bool_expression COLON NEWLINE block WORKOUT_FINISHED
+
+    {
+        printf("Entrou na regra 'if'\n");
+    }
+    ;
+
+
+
+while:
+    DURING bool_expression DO NEWLINE block WORKOUT_FINISHED
+
+    {
+        printf("Entrou na regra 'while'\n");
+    }
+    ;
+
+bool_expression:
+    bool_term
+    | bool_term OR bool_term
+
+    {
+        printf("Entrou na regra 'bool_expression'\n");
+    }
+    ;
+
+bool_term:
+    rel_expression
+    | rel_expression AND rel_expression
+
+    {
+        printf("Entrou na regra 'bool_term'\n");
+    }
+    ;
+
+rel_expression:
+    expression SAME_AS expression
+    | expression HEAVIER_THAN expression
+    | expression LIGHTER_THAN expression
+
+    {
+        printf("Entrou na regra 'rel_expression'\n");
+    }
+    ;
+
+
+assignment:
+    IDENTIFIER EQUALS expression
+
+    {
+        printf("Entrou na regra 'assignment'\n");
+    }
+    ;
+
+
+local :
+    WEIGHT IDENTIFIER
+    | WEIGHT IDENTIFIER EQUALS expression
+
+    {
+        printf("Entrou na regra 'local'\n");
+    }
+    ;
 
 print:
-    DISPLAY LPAREN expression RPAREN
+    DISPLAY LPAREN expression RPAREN 
 
-conditional:
-    IF LPAREN condition RPAREN LBRACE NEWLINE statement RBRACE
-    | IF LPAREN condition RPAREN LBRACE NEWLINE statement RBRACE ELSE LBRACE NEWLINE statement RBRACE
-; 
-
-condition:
-    expression rel_op expression
-    | expression
-;
-
-rel_op:
-    HEAVIER_THAN
-    | LIGHTER_THAN
-    | SAME_AS
-;
-
-
-routine_setup:
-    ROUTINE IDENTIFIER LBRACE NEWLINE exercise_declarations RBRACE
-;
-
-routine_detail:
-    ROUTINE_DETAIL IDENTIFIER LBRACE NEWLINE workout_part RBRACE
-;
-
-workout_part:
-    workout_part warmup
-    | workout_part cooldown
-    | workout_part exercise_action
-    | warmup
-    | cooldown
-    | exercise_action
-;
-
-cooldown:
-    COOLDOWN LBRACE NEWLINE exercise_action RBRACE NEWLINE
-
-warmup:
-    WARMUP LBRACE NEWLINE exercise_action RBRACE NEWLINE
-;
-
-exercise_action:
-    IDENTIFIER START NEWLINE REST NUMBER SECONDS NEWLINE
-    | IDENTIFIER START NEWLINE REST NUMBER SECONDS NEWLINE exercise_action
-;
-
-
-exercise_declarations:
-    exercise_declarations exercise_declaration
-    | exercise_declaration
-;
-
-exercise_declaration:
-    EXERCISE IDENTIFIER WITH REPS NUMBER SETS NUMBER NEWLINE
-;
-
-variable_assignment:
-    SET IDENTIFIER EQUALS expression NEWLINE
-;
+    {
+        printf("Entrou na regra 'print'\n");
+    }
+    ;
 
 expression:
-    IDENTIFIER
-    | NUMBER
-    | arithmetic_expression
-    | STRING
-;
+    term MORE_LOAD term
+    | term LESS_LOAD term
+    | term DOTDOT term
+    | term
 
-arithmetic_expression:
-    MINUS expression %prec PLUS
-    |expression PLUS expression
-    | expression MINUS expression
-    | expression MULT expression
-    | expression DIV expression
+    {
+        printf("Entrou na regra 'expression'\n");
+    }
+    ;
+
+term:
+    factor MULT factor
+    | factor DIV factor
+    | factor
+
+    {
+        printf("Entrou na regra 'term'\n");
+    }
+    ;
+
+factor:
+    NUMBER
+    | STRING
+    | IDENTIFIER
+    | MORE_LOAD factor
+    | LESS_LOAD factor
+    | NOT factor
     | LPAREN expression RPAREN
-    | LPAREN arithmetic_expression RPAREN
-    | expression EQUALS expression
-;
+    | RECEIVE LPAREN RPAREN
+
+    {
+        printf("Entrou na regra 'factor'\n");
+    }
+    ;
 
 
 
 %%
 
 void yyerror(const char *s) {
-
     fprintf(stderr, "Erro de sintaxe: %s\n", s);
 }
 
