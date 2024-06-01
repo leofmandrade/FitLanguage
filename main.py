@@ -1,24 +1,6 @@
 from abc import abstractmethod
 import sys
 import re
-# BLOCK = { STATEMENT };
-# STATEMENT = ( "λ" | ASSIGNMENT | LOCAL | PRINT | WHILE | IF ), "\n" ;
-# ASSIGNMENT = IDENTIFIER, "=", EXPRESSION ;
-# LOCAL = "weight", IDENTIFIER, ("λ" | ("=", BOOL_EXP));
-# PRINT = "display", "(", EXPRESSION, ")" ;
-# WHILE = "during", BOOL_EXP, "do", "\n", "λ", { ( STATEMENT ), "λ" }, "workout finished";
-# IF = "workout day", BOOL_EXP, ":", "\n", "λ", { ( STATEMENT ), "λ" }, ( "λ" | ( "rest day", ":", "\n", "λ", { ( STATEMENT ), "λ" })), "workout finished" ;
-# BOOL_EXP = BOOL_TERM, { ("or"), BOOL_TERM } ;
-# BOOL_TERM = REL_EXP, { ("and"), REL_EXP } ;
-# REL_EXP = EXPRESSION, { ("same as" | "heavier than" | "lighter than"), EXPRESSION } ;
-# EXPRESSION = TERM, { ("more load" | "less load" | ".."), TERM } ;
-# TERM = FACTOR, { ("*" | "/"), FACTOR } ;
-# FACTOR = NUMBER | STRING | IDENTIFIER | (("more load" | "less load" | "not"), FACTOR ) | "(", EXPRESSION, ")" | "receive", "(", ")" ;
-# IDENTIFIER = LETTER, { LETTER | DIGIT | "_" } ;
-# NUMBER = DIGIT, { DIGIT } ;
-# STRING = '"', { LETTER | DIGIT }, '"' ;
-# LETTER = ( "a" | "..." | "z" | "A" | "..." | "Z" ) ;
-# DIGIT = ( "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "0" ) ;
 
 # classe que representa a tabela de símbolos
 class SymbolTable():
